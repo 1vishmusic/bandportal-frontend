@@ -47,6 +47,9 @@ jobs:
             ./dist
             Dockerfile
 
+      - name: Print useful info
+        run: ls -al
+
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
@@ -54,7 +57,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and tag Docker image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/my-vite-app:latest .
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/bandportal-fe:latest .
 
       - name: Push Docker image
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/my-vite-app:latest
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/bandportal-fe:latest
