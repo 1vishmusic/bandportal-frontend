@@ -12,12 +12,18 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
+
       - name: Setup Node
         uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
       - name: Install dependencies
-        run: npm run install
+        run: npm run ci
+
       - name: Build project
         run: npm run build
+
       - name: Upload production-ready build files
         uses: actions/upload-artifact@v3
         with:
