@@ -43,7 +43,9 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: production-files
-          path: ./dist
+          path: |
+            ./dist
+            Dockerfile
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
