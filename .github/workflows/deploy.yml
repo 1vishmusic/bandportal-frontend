@@ -8,6 +8,7 @@ on:
 jobs:
   build:
     name: Build
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -27,26 +28,10 @@ jobs:
       - name: Upload production-ready build files
         uses: actions/upload-artifact@v3
         with:
-          name: production-files
+          name: Compiled Frontend
           path: |
             ./dist
             Dockerfile
-
-  deploy:
-    name: Deploy
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: production-files
-          path: |
-            ./dist
-            Dockerfile
-
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
