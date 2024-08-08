@@ -18,12 +18,9 @@ declare module 'vue' {
     EditEvent: typeof import('./src/components/form/EditEvent.vue')['default']
     EditPlace: typeof import('./src/components/form/EditPlace.vue')['default']
     EventList: typeof import('./src/components/main/EventList.vue')['default']
-    HelloWorld: (typeof import("./src/components/HelloWorld.vue"))["default"]
     Navbar: typeof import('./src/components/Navbar.vue')['default']
     PlaceList: typeof import('./src/components/main/PlaceList.vue')['default']
-    PlacesList: (typeof import("./src/components/sidebar/PlacesList.vue"))["default"]
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    Sidebar: (typeof import("./src/components/Sidebar.vue"))["default"]
   }
 }
