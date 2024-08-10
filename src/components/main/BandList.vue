@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { BandResponse } from "../../api/service/BandService";
-import { computed, ref } from "vue";
+import { BandResponse } from "@/api/service/BandService";
+import { ref } from "vue";
 
-const props = defineProps<{
+defineProps<{
   bands: BandResponse[];
 }>();
 
@@ -10,7 +10,7 @@ const emit = defineEmits({
   onUpdate() {},
 });
 
-const error = ref(null);
+const error = ref<string|null>(null);
 const snackbar = ref(false);
 const displayError = (message: string) => {
   snackbar.value = true;

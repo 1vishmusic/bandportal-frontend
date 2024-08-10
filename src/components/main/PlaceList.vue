@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { PlaceResponse } from "../../api/service/PlaceService";
+import { PlaceResponse } from "@/api/service/PlaceService";
 import { ref } from "vue";
 import EditPlace from "../form/EditPlace.vue";
 import DeletePlace from "../form/DeletePlace.vue";
 
-const props = defineProps<{
+defineProps<{
   places: PlaceResponse[];
 }>();
 
@@ -12,7 +12,7 @@ const emit = defineEmits({
   onUpdate() {},
 });
 
-const error = ref(null);
+const error = ref<string|null>(null);
 const snackbar = ref(false);
 const displayError = (message: string) => {
   snackbar.value = true;

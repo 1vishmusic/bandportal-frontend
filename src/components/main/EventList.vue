@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { EventResponse } from "../../api/service/EventService";
-import { computed, onMounted, ref } from "vue";
-import { dateToString } from "../../utils/DateFormat";
-import { BandResponse, readAllBands } from "../../api/service/BandService";
-import { PlaceResponse, readAllPlaces } from "../../api/service/PlaceService";
+import { EventResponse } from "@/api/service/EventService";
+import { ref } from "vue";
+import { dateToString } from "@/utils/DateFormat";
+import { BandResponse } from "@/api/service/BandService";
+import { PlaceResponse } from "@/api/service/PlaceService";
 
 const props = defineProps<{
   events: EventResponse[];
@@ -16,7 +16,7 @@ const emit = defineEmits({
   onUpdate() {},
 });
 
-const error = ref(null);
+const error = ref<string|null>(null);
 const snackbar = ref(false);
 const displayError = (message: string) => {
   snackbar.value = true;
