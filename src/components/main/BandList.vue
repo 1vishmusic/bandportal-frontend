@@ -4,6 +4,7 @@ import { ref } from "vue";
 
 defineProps<{
   bands: BandResponse[];
+  loaded: boolean;
 }>();
 
 const emit = defineEmits({
@@ -34,7 +35,13 @@ const headers = [
 </script>
 
 <template>
+  <div v-if="!loaded">
+    <div class="d-flex justify-center align-center" style="min-height: 100px;">
+      <v-progress-circular indeterminate />
+    </div>
+  </div>
   <v-data-table
+    v-else
     :items="bands"
     :headers="headers"
     :sort-by="[{ key: 'bandName', order: 'asc' }]"
@@ -54,6 +61,7 @@ const headers = [
         :website="item.bandWebsite ?? ''"
         @on-place-modify="emit('onUpdate')"
         @on-error="displayError"
+        class="me-1"
       />
       <DeleteBand
         :id="item.bandId"

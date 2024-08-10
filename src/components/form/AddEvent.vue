@@ -50,7 +50,7 @@ const create = () => {
 </script>
 
 <template>
-  <v-btn prepend-icon="$plus">
+  <v-btn prepend-icon="$plus" variant="tonal">
     Nová událost
     <v-dialog activator="parent" max-width="550">
       <template v-slot:default="{ isActive }">

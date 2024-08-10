@@ -10,6 +10,7 @@ const props = defineProps<{
   places: PlaceResponse[];
   bands: BandResponse[];
   sortOrder: "desc" | "asc";
+  loaded: boolean;
 }>();
 
 const emit = defineEmits({
@@ -52,7 +53,12 @@ const headers = [
 </script>
 
 <template>
-  <div v-if="events.length === 0">Žádné události nebyly nalezeny</div>
+  <div v-if="!loaded">
+    <div class="d-flex justify-center align-center" style="min-height: 100px;">
+      <v-progress-circular indeterminate />
+    </div>
+  </div>
+  <div v-else-if="events.length === 0">Žádné události nebyly nalezeny</div>
   <v-data-table
     v-else
     :items="props.events"
@@ -96,6 +102,7 @@ const headers = [
           :all-bands="props.bands"
           @on-event-modify="emit('onUpdate')"
           @on-error="displayError"
+          class="me-1"
         />
         <DeleteEvent
           :id="item.eventId"

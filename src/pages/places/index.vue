@@ -3,26 +3,38 @@ import { onMounted, Ref, ref } from "vue";
 import { PlaceResponse, readAllPlaces } from "@/api/service/PlaceService";
 
 const places: Ref<PlaceResponse[]> = ref([]);
+const placesLoaded = ref(false)
 
 const fetchAllPlaces = () => {
   readAllPlaces()
-    .then(p => { places.value = p })
-
-  // TODO - Catch error
+    .then(p => { places.value = p; placesLoaded.value = true })
 };
 
 onMounted(fetchAllPlaces);
 </script>
 
 <template>
-  <v-container>
-    <div class="d-flex justify-space-between mb-2">
-      <div class="text-h4">Místa a podniky</div>
-      <AddPlace @on-place-modify="fetchAllPlaces" />
-    </div>
+  <div class="mb-6">
+    <h2 class="mb-2 text-h4 text-sm-h4">Místa a podniky</h2>
 
-    <PlaceList :places="places" @on-update="fetchAllPlaces" />
-  </v-container>
+    <v-card class="mb-2">
+      <div class="pa-4 d-flex justify-end">
+        <AddPlace @on-place-modify="fetchAllPlaces" />
+      </div>
+      <v-divider />
+      <PlaceList :places="places" :loaded="placesLoaded" @on-update="fetchAllPlaces" />
+
+    </v-card>
+  </div>
 </template>
+
+<route>
+{
+  meta: {
+    layout: "container"
+  }
+}
+</route>
+
 
 <style scoped></style>

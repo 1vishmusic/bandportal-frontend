@@ -10,15 +10,17 @@ import { PlaceResponse, readAllPlaces } from "@/api/service/PlaceService";
 
 const events: Ref<EventResponse[]> = ref([]);
 const upcomingEvents: Ref<EventResponse[]> = ref([]);
+const eventsLoaded = ref(false)
+const upcomingEventsLoaded = ref(false)
 
 const bands = ref<BandResponse[]>([]);
 const places = ref<PlaceResponse[]>([]);
 
 const fetchAllEvents = () => {
   readAllEvents()
-    .then(e => {events.value = e})
+    .then(e => {events.value = e; eventsLoaded.value = true})
   readUpcomingEvents()
-    .then(e => {events.value = e})
+    .then(e => {upcomingEvents.value = e; upcomingEventsLoaded.value = true})
 };
 
 onMounted(() => {
@@ -32,36 +34,58 @@ onMounted(() => {
 </script>
 
 <template>
-  <v-container>
-    <div class="mb-4">
-      <div class="d-flex justify-space-between mb-2">
-        <div class="text-h4">Nadcházející události</div>
+  <div class="mb-6">
+    <h2 class="mb-2 text-h4 text-sm-h4">Nadcházející události</h2>
+
+    <v-card class="mb-2">
+      <div class="pa-4 d-flex justify-end">
         <AddEvent
           :bands="bands"
           :places="places"
           @on-event-modify="fetchAllEvents"
         />
       </div>
+      <v-divider />
       <EventList
         :events="upcomingEvents"
+        :loaded="upcomingEventsLoaded"
         :bands="bands"
         :places="places"
         sort-order="asc"
         @on-update="fetchAllEvents"
       />
-    </div>
+    </v-card>
+  </div>
+  <div class="mb-4">
+    <h2 class="mb-2 text-h4 text-sm-h4">Všechny události</h2>
 
-    <div>
-      <div class="text-h4 mb-2">Všechny události</div>
+    <v-card class="mb-2">
+      <div class="pa-4 d-flex justify-end">
+        <AddEvent
+          :bands="bands"
+          :places="places"
+          @on-event-modify="fetchAllEvents"
+        />
+      </div>
+      <v-divider />
       <EventList
         :events="events"
+        :loaded="eventsLoaded"
         :bands="bands"
         :places="places"
         sort-order="desc"
         @on-update="fetchAllEvents"
-      ></EventList>
-    </div>
-  </v-container>
+      />
+    </v-card>
+  </div>
 </template>
+
+<route>
+{
+  meta: {
+    layout: "container"
+  }
+}
+</route>
 
 <style scoped></style>

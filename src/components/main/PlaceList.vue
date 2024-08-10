@@ -5,6 +5,7 @@ import EditPlace from "../form/EditPlace.vue";
 import DeletePlace from "../form/DeletePlace.vue";
 
 defineProps<{
+  loaded: boolean;
   places: PlaceResponse[];
 }>();
 
@@ -36,7 +37,13 @@ const headers = [
 </script>
 
 <template>
+  <div v-if="!loaded">
+    <div class="d-flex justify-center align-center" style="min-height: 100px;">
+      <v-progress-circular indeterminate />
+    </div>
+  </div>
   <v-data-table
+    v-else
     :items="places"
     :headers="headers"
     :sort-by="[{ key: 'name', order: 'asc' }]"
@@ -55,6 +62,7 @@ const headers = [
         :website="item.placeWebsite ?? ''"
         @on-place-modify="emit('onUpdate')"
         @on-error="displayError"
+        class="me-1"
       />
       <DeletePlace
         :id="item.placeId"

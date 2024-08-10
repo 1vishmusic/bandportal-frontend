@@ -26,11 +26,11 @@ const add = () => {
 </script>
 
 <template>
-  <v-btn prepend-icon="$plus">
+  <v-btn prepend-icon="$plus" variant="tonal">
     Nový interpret / kapela
     <v-dialog activator="parent" max-width="550">
       <template v-slot:default="{ isActive }">
-        <v-card title="Upravit interpreta">
+        <v-card title="Přidat interpreta">
           <v-card-text>
             <v-text-field
               v-model="name"
