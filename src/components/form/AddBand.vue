@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { createBand } from "../../api/service/BandService";
+import {BandRequest, createBand} from "@/api/service/BandService";
 
 const emit = defineEmits({
   onBandModify(): void {},
@@ -11,19 +11,17 @@ const name = ref("");
 const website = ref("");
 
 const add = () => {
-  createBand(
-    {
-      bandName: name.value,
-      bandWebsite: website.value == "" ? null : website.value,
-    },
-    () => {
+  const bandRequest: BandRequest = {
+    bandName: name.value,
+    bandWebsite: website.value == "" ? null : website.value,
+  }
+
+  createBand(bandRequest)
+    .then(() => {
       name.value = website.value = "";
-      emit("onBandModify");
-    },
-    (e) => {
-      emit("onError", e.message);
-    },
-  );
+      emit('onBandModify');
+    })
+    .catch((e) => emit("onError", e.message))
 };
 </script>
 

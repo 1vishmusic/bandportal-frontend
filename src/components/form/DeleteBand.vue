@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { deleteBand, updateBand } from "../../api/service/BandService";
+import { deleteBand } from "../../api/service/BandService";
 
 const props = defineProps<{
   id: number;
@@ -13,15 +12,9 @@ const emit = defineEmits({
 });
 
 const remove = () => {
-  deleteBand(
-    props.id,
-    () => {
-      emit("onPlaceModify");
-    },
-    (e) => {
-      emit("onError", e.message);
-    },
-  );
+  deleteBand(props.id)
+    .then(() => emit('onPlaceModify'))
+    .catch((e) => emit('onError', e.message))
 };
 </script>
 

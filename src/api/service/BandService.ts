@@ -1,66 +1,43 @@
 import axios from "axios";
 import { SERVER_URL } from "../DataServerConfig";
-import { ErrorResponse } from "../ErrorResponse";
 
-export class BandRequest {
+export interface BandRequest {
   bandName: string;
   bandWebsite: string | null;
 }
 
-export class BandResponse {
+export interface BandResponse {
   bandId: number;
-  bandName: string | null;
+  bandName: string;
   bandWebsite: string | null;
 }
 
-export const createBand = (
-  request: BandRequest,
-  handler: () => void,
-  errorHandler: (response: ErrorResponse) => void,
-): void => {
-  axios.post(SERVER_URL + "band", request).then(() => {
-    handler();
-  });
-};
+export const createBand = (band: BandRequest) => new Promise<BandResponse>((resolve, reject) =>
+  axios.post<BandResponse>(SERVER_URL + "band", band)
+    .then(r => { resolve(r.data) })
+    .catch(reject)
+)
 
-export const readAllBands = (
-  handler: (bands: BandResponse[]) => void,
-  errorHandler: (response: ErrorResponse) => void,
-): void => {
-  axios.get(SERVER_URL + "band").then((r) => {
-    let bandResponse: BandResponse[] = r.data;
-    handler(bandResponse);
-  });
-};
+export const readAllBands = () => new Promise<BandResponse[]>((resolve, reject) =>
+  axios.get<BandResponse[]>(SERVER_URL + "band")
+    .then(r => { resolve(r.data) })
+    .catch(reject)
+)
 
-export const readBand = (
-  bandId: number,
-  handler: (band: BandResponse) => void,
-  errorHandler: (response: ErrorResponse) => void,
-): void => {
-  axios.get(SERVER_URL + "band/" + bandId).then((r) => {
-    let bandResponse: BandResponse = r.data;
-    handler(bandResponse);
-  });
-};
+export const readBand = (bandId: number) => new Promise<BandResponse>((resolve, reject) =>
+  axios.get<BandResponse>(SERVER_URL + "band/" + bandId)
+    .then(r => { resolve(r.data) })
+    .catch(reject)
+)
 
-export const updateBand = (
-  bandId: number,
-  request: BandRequest,
-  handler: () => void,
-  errorHandler: (response: ErrorResponse) => void,
-): void => {
-  axios.put(SERVER_URL + "band/" + bandId, request).then(() => {
-    handler();
-  });
-};
+export const updateBand = (bandId: number, band: BandRequest) => new Promise<BandResponse>((resolve, reject) =>
+  axios.put(SERVER_URL + "band/" + bandId, band)
+    .then(r => { resolve(r.data) })
+    .catch(reject)
+)
 
-export const deleteBand = (
-  bandId: number,
-  handler: () => void,
-  errorHandler: (response: ErrorResponse) => void,
-): void => {
-  axios.delete(SERVER_URL + "band/" + bandId).then(() => {
-    handler();
-  });
-};
+export const deleteBand = (bandId: number) => new Promise<void>((resolve, reject) =>
+  axios.delete(SERVER_URL + "band/" + bandId)
+    .then(r => { resolve() })
+    .catch(reject)
+)

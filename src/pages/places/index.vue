@@ -1,16 +1,14 @@
 <script setup lang="ts">
 import { onMounted, Ref, ref } from "vue";
-import { PlaceResponse, readAllPlaces } from "../api/service/PlaceService";
+import { PlaceResponse, readAllPlaces } from "@/api/service/PlaceService";
 
 const places: Ref<PlaceResponse[]> = ref([]);
 
 const fetchAllPlaces = () => {
-  readAllPlaces(
-    (p) => {
-      places.value = p;
-    },
-    () => {},
-  );
+  readAllPlaces()
+    .then(p => { places.value = p })
+
+  // TODO - Catch error
 };
 
 onMounted(fetchAllPlaces);

@@ -1,107 +1,43 @@
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { SERVER_URL } from "../DataServerConfig";
-import { ErrorResponse } from "../ErrorResponse";
 
-export class PlaceRequest {
+export interface PlaceRequest {
   placeName: string;
   placeWebsite: string | null;
 }
 
-export class PlaceResponse {
+export interface PlaceResponse {
   placeId: number;
-  placeName: string | null;
+  placeName: string;
   placeWebsite: string | null;
 }
 
-export const createPlace = (
-  request: PlaceRequest,
-  handler: () => void,
-  errorHandler: (response: ErrorResponse) => void,
-): void => {
-  axios
-    .post(SERVER_URL + "place", request)
-    .then(() => {
-      handler();
-    })
-    .catch((e: AxiosError) => {
-      errorHandler({
-        message: e.message,
-        status: e.request.status,
-      });
-    });
-};
+export const createPlace = (place: PlaceRequest) => new Promise<PlaceResponse>((resolve, reject) =>
+  axios.post<PlaceResponse>(SERVER_URL + "place", place)
+    .then(r => { resolve(r.data) })
+    .catch(reject)
+)
 
-export const readAllPlaces = (
-  handler: (places: PlaceResponse[]) => void,
-  errorHandler: (response: ErrorResponse) => void,
-): void => {
-  axios
-    .get(SERVER_URL + "place")
-    .then((r) => {
-      let placeResponse: PlaceResponse[] = r.data;
-      handler(placeResponse);
-    })
-    .catch((e: AxiosError) => {
-      errorHandler({
-        message: e.message,
-        status: e.request.status,
-      });
-    });
-};
+export const readAllPlaces = () => new Promise<PlaceResponse[]>((resolve, reject) =>
+  axios.get<PlaceResponse[]>(SERVER_URL + "place")
+    .then(r => { resolve(r.data) })
+    .catch(reject)
+)
 
-export const readPlace = (
-  placeId: number,
-  handler: (place: PlaceResponse) => void,
-  errorHandler: (response: ErrorResponse) => void,
-): void => {
-  axios
-    .get(SERVER_URL + "place/" + placeId)
-    .then((r) => {
-      let placeResponse: PlaceResponse = r.data;
-      handler(placeResponse);
-    })
-    .catch((e: AxiosError) => {
-      errorHandler({
-        message: e.message,
-        status: e.request.status,
-      });
-    });
-};
+export const readPlace = (placeId: number) => new Promise<PlaceResponse>((resolve, reject) =>
+  axios.get<PlaceResponse>(SERVER_URL + "place/" + placeId)
+    .then(r => { resolve(r.data) })
+    .catch(reject)
+)
 
-export const updatePlace = (
-  placeId: number,
-  request: PlaceRequest,
-  handler: () => void,
-  errorHandler: (response: ErrorResponse) => void,
-): void => {
-  axios
-    .put(SERVER_URL + "place/" + placeId, request)
-    .then(() => {
-      handler();
-    })
-    .catch((e: AxiosError) => {
-      errorHandler({
-        message: e.message,
-        status: e.request.status,
-      });
-    });
-};
+export const updatePlace = (placeId: number, place: PlaceRequest) => new Promise<PlaceResponse>((resolve, reject) =>
+  axios.put(SERVER_URL + "place/" + placeId, place)
+    .then(r => { resolve(r.data) })
+    .catch(reject)
+)
 
-export const deletePlace = (
-  placeId: number,
-  handler: () => void,
-  errorHandler: (response: ErrorResponse) => void,
-): void => {
-  axios
-    .delete(SERVER_URL + "place/" + placeId)
-    .then(() => {
-      handler();
-    })
-    .catch((e: AxiosError) => {
-      console.log(e);
-      errorHandler({
-        message: e.message,
-        status: e.request.status,
-      });
-    });
-};
+export const deletePlace = (placeId: number) => new Promise<void>((resolve, reject) =>
+  axios.delete(SERVER_URL + "place/" + placeId)
+    .then(r => { resolve() })
+    .catch(reject)
+)

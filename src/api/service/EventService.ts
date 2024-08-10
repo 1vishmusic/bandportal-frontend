@@ -1,10 +1,9 @@
 import axios from "axios";
 import { SERVER_URL } from "../DataServerConfig";
-import { PlaceResponse } from "./PlaceService";
 import { BandResponse } from "./BandService";
-import { ErrorResponse } from "../ErrorResponse";
+import {PlaceResponse} from "@/api/service/PlaceService";
 
-export class EventRequest {
+export interface EventRequest {
   eventName: string;
   eventStart: string;
   eventEnd: string | null;
@@ -14,7 +13,7 @@ export class EventRequest {
   bands: number[];
 }
 
-export class EventResponse {
+export interface EventResponse {
   eventId: number;
   eventName: string;
   eventStart: string;
@@ -26,64 +25,38 @@ export class EventResponse {
   bands: BandResponse[];
 }
 
-export const createEvent = (
-  request: EventRequest,
-  handler: () => void,
-  errorHandler: (response: ErrorResponse) => void,
-): void => {
-  axios.post<EventResponse[]>(SERVER_URL + "event", request).then(() => {
-    handler();
-  });
-};
+export const createEvent = (event: EventRequest) => new Promise<EventResponse>((resolve, reject) =>
+  axios.post<EventResponse>(SERVER_URL + "event", event)
+    .then(r => { resolve(r.data) })
+    .catch(reject)
+)
 
-export const readAllEvents = (
-  handler: (events: EventResponse[]) => void,
-  errorHandler: (response: ErrorResponse) => void,
-): void => {
-  axios.get<EventResponse[]>(SERVER_URL + "event").then((r) => {
-    let eventResponse: EventResponse[] = r.data;
-    handler(eventResponse);
-  });
-};
+export const readAllEvents = () => new Promise<EventResponse[]>((resolve, reject) =>
+  axios.get<EventResponse[]>(SERVER_URL + "event")
+    .then(r => { resolve(r.data) })
+    .catch(reject)
+)
 
-export const readUpcomingEvents = (
-  handler: (events: EventResponse[]) => void,
-  errorHandler: (response: ErrorResponse) => void,
-): void => {
-  axios.get<EventResponse[]>(SERVER_URL + "event/upcoming").then((r) => {
-    let eventResponse: EventResponse[] = r.data;
-    handler(eventResponse);
-  });
-};
+export const readUpcomingEvents = () => new Promise<EventResponse[]>((resolve, reject) =>
+  axios.get<EventResponse[]>(SERVER_URL + "event/upcoming")
+    .then(r => { resolve(r.data) })
+    .catch(reject)
+)
 
-export const readEvent = (
-  eventId: number,
-  handler: (event: EventResponse) => void,
-  errorHandler: (response: ErrorResponse) => void,
-): void => {
-  axios.get<EventResponse>(SERVER_URL + "event/" + eventId).then((r) => {
-    let eventResponse: EventResponse = r.data;
-    handler(eventResponse);
-  });
-};
+export const readEvent = (eventId: number) => new Promise<EventResponse>((resolve, reject) =>
+  axios.get<EventResponse>(SERVER_URL + "event/" + eventId)
+    .then(r => { resolve(r.data) })
+    .catch(reject)
+)
 
-export const updateEvent = (
-  eventId: number,
-  request: EventRequest,
-  handler: () => void,
-  errorHandler: (response: ErrorResponse) => void,
-): void => {
-  axios.put(SERVER_URL + "event/" + eventId, request).then(() => {
-    handler();
-  });
-};
+export const updateEvent = (eventId: number, event: EventRequest) => new Promise<EventResponse>((resolve, reject) =>
+  axios.put(SERVER_URL + "event/" + eventId, event)
+    .then(r => { resolve(r.data) })
+    .catch(reject)
+)
 
-export const deleteEvent = (
-  eventId: number,
-  handler: () => void,
-  errorHandler: (response: ErrorResponse) => void,
-): void => {
-  axios.delete(SERVER_URL + "event/" + eventId).then(() => {
-    handler();
-  });
-};
+export const deleteEvent = (eventId: number) => new Promise<void>((resolve, reject) =>
+  axios.delete(SERVER_URL + "event/" + eventId)
+    .then(r => { resolve() })
+    .catch(reject)
+)

@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { createEvent, updateEvent } from "../../api/service/EventService";
-import { PlaceResponse } from "../../api/service/PlaceService";
-import { BandResponse } from "../../api/service/BandService";
+import {createEvent, EventRequest} from "@/api/service/EventService";
+import { PlaceResponse } from "@/api/service/PlaceService";
+import { BandResponse } from "@/api/service/BandService";
 import { ref } from "vue";
+import {now} from "@/utils/DateFormat";
 
 const props = defineProps<{
   places: PlaceResponse[];
@@ -14,34 +15,37 @@ const emit = defineEmits({
   onError(message: string): void {},
 });
 
-const name = ref("");
-const website = ref("");
-const start = ref(null);
-const end = ref(null);
+const name = ref<string>("");
+const website = ref<string>("");
+const start = ref<string>(now());
+const end = ref<string|null>(null);
 
-const place = ref(null);
-const bands = ref([]);
+const place = ref<PlaceResponse|null>(null);
+const bands = ref<BandResponse[]>([]);
 
-const update = () => {
-  createEvent(
-    {
-      eventName: name.value,
-      eventWebsite: website.value === "" ? null : website.value,
-      eventStart: start.value,
-      eventEnd: end.value,
-      placeId: place.value.placeId,
-      bands: bands.value.map((b) => b.bandId),
-    },
-    () => {
+const create = () => {
+  if(place.value === null) {
+    return
+  }
+
+  const eventRequest: EventRequest = {
+    eventName: name.value,
+    eventWebsite: website.value === "" ? null : website.value,
+    eventStart: start.value,
+    eventEnd: end.value,
+    placeId: place.value.placeId,
+    bands: bands.value.map((b) => b.bandId),
+  }
+
+  createEvent(eventRequest)
+    .then(() => {
       name.value = website.value = "";
-      start.value = end.value = place.value = null;
+      start.value = now()
+      end.value = place.value = null;
       bands.value = [];
       emit("onEventModify");
-    },
-    (e) => {
-      emit("onError", e.message);
-    },
-  );
+    })
+    .catch((e) => emit('onError', e.message))
 };
 </script>
 
@@ -77,7 +81,7 @@ const update = () => {
                 }
               "
               :items="
-                props.places.sort((a, b) =>
+                props.places.sort((a: PlaceResponse, b: PlaceResponse) =>
                   a.placeName.localeCompare(b.placeName),
                 )
               "
@@ -91,7 +95,7 @@ const update = () => {
                 }
               "
               :items="
-                props.bands.sort((a, b) => a.bandName.localeCompare(b.bandName))
+                props.bands.sort((a: BandResponse, b: BandResponse) => a.bandName.localeCompare(b.bandName))
               "
               label="Kapely"
               multiple
@@ -107,7 +111,7 @@ const update = () => {
               @click="
                 () => {
                   isActive.value = false;
-                  update();
+                  create();
                 }
               "
               >Uložit</v-btn

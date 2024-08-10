@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { deleteEvent } from "../../api/service/EventService";
-import { HttpStatusCode } from "axios";
+import { deleteEvent } from "@/api/service/EventService";
 
 const props = defineProps<{
   id: number;
@@ -13,21 +12,9 @@ const emit = defineEmits({
 });
 
 const remove = () => {
-  deleteEvent(
-    props.id,
-    () => {
-      emit("onEventModify");
-    },
-    (e) => {
-      let message = "Nastala neznámá chyba";
-      if (e.status == HttpStatusCode.NotFound) {
-        message =
-          "Požadovaná událost nebyla nalezeno. Pravděpodobně ji už někdo smazal.";
-      }
-
-      emit("onError", message);
-    },
-  );
+  deleteEvent(props.id)
+    .then(() => emit('onEventModify'))
+    .catch((e) => emit('onError', e.message))
 };
 </script>
 

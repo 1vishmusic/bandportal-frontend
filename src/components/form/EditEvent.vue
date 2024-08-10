@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { updateEvent } from "../../api/service/EventService";
-import { PlaceResponse } from "../../api/service/PlaceService";
-import { BandResponse } from "../../api/service/BandService";
+import {EventRequest, updateEvent} from "@/api/service/EventService";
+import { PlaceResponse } from "@/api/service/PlaceService";
+import { BandResponse } from "@/api/service/BandService";
 
 const props = defineProps<{
   id: number;
@@ -31,23 +31,18 @@ const place = ref(props.place);
 const bands = ref(props.bands);
 
 const update = () => {
-  updateEvent(
-    props.id,
-    {
-      eventName: name.value,
-      eventWebsite: website.value === "" ? null : website.value,
-      eventStart: start.value,
-      eventEnd: end.value,
-      placeId: place.value.placeId,
-      bands: bands.value.map((b) => b.bandId),
-    },
-    () => {
-      emit("onEventModify");
-    },
-    (e) => {
-      emit("onError", e.message);
-    },
-  );
+  const eventRequest: EventRequest = {
+    eventName: name.value,
+    eventWebsite: website.value === '' ? null : website.value,
+    eventStart: start.value,
+    eventEnd: end.value === '' ? null : end.value,
+    placeId: place.value.placeId,
+    bands: bands.value.map((b) => b.bandId),
+  }
+
+  updateEvent(props.id, eventRequest)
+    .then(() => emit('onEventModify'))
+    .catch(e => emit('onError', e.message))
 };
 </script>
 

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { updatePlace } from "../../api/service/PlaceService";
-import { HttpStatusCode } from "axios";
+import {PlaceRequest, updatePlace} from "@/api/service/PlaceService";
 
 const props = defineProps<{
   id: number;
@@ -18,25 +17,14 @@ const name = ref(props.name);
 const website = ref(props.website);
 
 const update = () => {
-  updatePlace(
-    props.id,
-    {
-      placeName: name.value,
-      placeWebsite: website.value === "" ? null : website.value,
-    },
-    () => {
-      emit("onPlaceModify");
-    },
-    (e) => {
-      let message = "Nastala neznámá chyba";
-      if (e.status == HttpStatusCode.NotFound) {
-        message =
-          "Požadované místo nebylo nalezeno. Pravděpodobně ho už někdo smazal.";
-      }
+  const placeRequest: PlaceRequest = {
+    placeName: name.value,
+    placeWebsite: website.value === "" ? null : website.value,
+  }
 
-      emit("onError", message);
-    },
-  );
+  updatePlace(props.id, placeRequest)
+    .then(() => emit('onPlaceModify'))
+    .catch((e) => emit('onError', e.message))
 };
 </script>
 

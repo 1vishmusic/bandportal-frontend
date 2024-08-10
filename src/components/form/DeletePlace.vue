@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { deletePlace } from "../../api/service/PlaceService";
-import { HttpStatusCode } from "axios";
+import { deletePlace } from "@/api/service/PlaceService";
 
 const props = defineProps<{
   id: number;
@@ -13,23 +12,9 @@ const emit = defineEmits({
 });
 
 const remove = () => {
-  deletePlace(
-    props.id,
-    () => {
-      emit("onPlaceModify");
-    },
-    (e) => {
-      let message = "Nastala neznámá chyba";
-      if (e.status == HttpStatusCode.Conflict) {
-        message = "Na místě je závislá událost a tudíž nejde smazat.";
-      } else if (e.status == HttpStatusCode.NotFound) {
-        message =
-          "Požadované místo nebylo nalezeno. Pravděpodobně ho už někdo smazal.";
-      }
-
-      emit("onError", message);
-    },
-  );
+  deletePlace(props.id)
+    .then(() => emit('onPlaceModify'))
+    .catch((e) => emit('onError', e.message))
 };
 </script>
 

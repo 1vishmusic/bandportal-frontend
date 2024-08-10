@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { createPlace } from "../../api/service/PlaceService";
+import {createPlace, PlaceRequest} from "../../api/service/PlaceService";
 
 const emit = defineEmits({
   onPlaceModify(): void {},
@@ -11,18 +11,14 @@ const name = ref("");
 const website = ref("");
 
 const add = () => {
-  createPlace(
-    {
-      placeName: name.value,
-      placeWebsite: website.value == "" ? null : website.value,
-    },
-    () => {
-      emit("onPlaceModify");
-    },
-    (e) => {
-      emit("onError", e.message);
-    },
-  );
+  const placeRequest: PlaceRequest = {
+    placeName: name.value,
+    placeWebsite: website.value == "" ? null : website.value,
+  }
+
+  createPlace(placeRequest)
+    .then(() => emit('onPlaceModify'))
+    .catch((e) => emit('onError', e.message))
 };
 </script>
 

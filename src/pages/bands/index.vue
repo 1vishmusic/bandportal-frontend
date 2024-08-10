@@ -1,16 +1,12 @@
 <script setup lang="ts">
 import { onMounted, Ref, ref } from "vue";
-import { BandResponse, readAllBands } from "../api/service/BandService";
+import { BandResponse, readAllBands } from "@/api/service/BandService";
 
 const bands: Ref<BandResponse[]> = ref([]);
 
 const fetchAllBands = () => {
-  readAllBands(
-    (p) => {
-      bands.value = p;
-    },
-    () => {},
-  );
+  readAllBands()
+    .then(b => {bands.value = b})
 };
 
 onMounted(fetchAllBands);

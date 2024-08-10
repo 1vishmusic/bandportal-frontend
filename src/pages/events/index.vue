@@ -3,46 +3,29 @@ import {
   EventResponse,
   readAllEvents,
   readUpcomingEvents,
-} from "../api/service/EventService";
+} from "@/api/service/EventService";
 import { onMounted, Ref, ref } from "vue";
-import { BandResponse, readAllBands } from "../api/service/BandService";
-import { PlaceResponse, readAllPlaces } from "../api/service/PlaceService";
-import { ErrorResponse } from "../api/ErrorResponse";
+import { BandResponse, readAllBands } from "@/api/service/BandService";
+import { PlaceResponse, readAllPlaces } from "@/api/service/PlaceService";
 
 const events: Ref<EventResponse[]> = ref([]);
 const upcomingEvents: Ref<EventResponse[]> = ref([]);
 
-const bands = ref([]);
-const places = ref([]);
+const bands = ref<BandResponse[]>([]);
+const places = ref<PlaceResponse[]>([]);
 
 const fetchAllEvents = () => {
-  readAllEvents(
-    (e: EventResponse[]) => {
-      events.value = e;
-    },
-    (r: ErrorResponse) => {},
-  );
-  readUpcomingEvents(
-    (e: EventResponse[]) => {
-      upcomingEvents.value = e;
-    },
-    (r: ErrorResponse) => {},
-  );
+  readAllEvents()
+    .then(e => {events.value = e})
+  readUpcomingEvents()
+    .then(e => {events.value = e})
 };
 
 onMounted(() => {
-  readAllBands(
-    (b: BandResponse[]) => {
-      bands.value = b;
-    },
-    (r: ErrorResponse) => {},
-  );
-  readAllPlaces(
-    (p: PlaceResponse[]) => {
-      places.value = p;
-    },
-    (r: ErrorResponse) => {},
-  );
+  readAllBands()
+    .then(b => {bands.value = b})
+  readAllPlaces()
+    .then(p => {places.value = p})
 
   fetchAllEvents();
 });

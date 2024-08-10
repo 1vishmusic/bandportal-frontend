@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { updatePlace } from "../../api/service/PlaceService";
-import { updateBand } from "../../api/service/BandService";
+import {BandRequest, updateBand} from "@/api/service/BandService";
 
 const props = defineProps<{
   id: number;
@@ -18,19 +17,15 @@ const name = ref(props.name);
 const website = ref(props.website);
 
 const update = () => {
-  updateBand(
-    props.id,
-    {
-      bandName: name.value,
-      bandWebsite: website.value === "" ? null : website.value,
-    },
-    () => {
+  const bandRequest: BandRequest = {
+    bandName: name.value,
+    bandWebsite: website.value === "" ? null : website.value,
+  }
+  updateBand(props.id, bandRequest)
+    .then(() => {
       emit("onPlaceModify");
-    },
-    (e) => {
-      emit("onError", e.message);
-    },
-  );
+    })
+    .catch((e) => emit("onError", e.message))
 };
 </script>
 
