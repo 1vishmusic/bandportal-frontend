@@ -89,7 +89,7 @@ const headers = [
       {{ item.bands.map((b) => b.bandName).join(", ") }}
     </template>
     <template v-slot:item.id="{ item }">
-      <div class="d-flex justify-start">
+      <div class="d-flex flex-column flex-sm-row ga-1 ma-1">
         <EditEvent
           :id="item.eventId"
           :name="item.eventName"
@@ -102,7 +102,6 @@ const headers = [
           :all-bands="props.bands"
           @on-event-modify="emit('onUpdate')"
           @on-error="displayError"
-          class="me-1"
         />
         <DeleteEvent
           :id="item.eventId"

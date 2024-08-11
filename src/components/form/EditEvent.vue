@@ -47,7 +47,7 @@ const update = () => {
 </script>
 
 <template>
-  <v-btn size="small" variant="tonal">
+  <v-btn prepend-icon="mdi-pencil" size="small" variant="tonal">
     Upravit
     <v-dialog activator="parent" max-width="550">
       <template v-slot:default="{ isActive }">

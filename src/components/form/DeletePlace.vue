@@ -19,7 +19,7 @@ const remove = () => {
 </script>
 
 <template>
-  <v-btn size="small" variant="tonal">
+  <v-btn prepend-icon="mdi-delete" size="small" variant="tonal">
     Smazat
     <v-dialog activator="parent" max-width="550">
       <template v-slot:default="{ isActive }">

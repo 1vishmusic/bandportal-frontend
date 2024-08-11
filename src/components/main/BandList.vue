@@ -55,20 +55,21 @@ const headers = [
     </template>
 
     <template v-slot:item.id="{ item }">
-      <EditBand
-        :id="item.bandId"
-        :name="item.bandName"
-        :website="item.bandWebsite ?? ''"
-        @on-place-modify="emit('onUpdate')"
-        @on-error="displayError"
-        class="me-1"
-      />
-      <DeleteBand
-        :id="item.bandId"
-        :name="item.bandName"
-        @on-place-modify="emit('onUpdate')"
-        @on-error="displayError"
-      />
+      <div class="d-flex flex-column flex-sm-row ga-1 ma-1">
+        <EditBand
+          :id="item.bandId"
+          :name="item.bandName"
+          :website="item.bandWebsite ?? ''"
+          @on-place-modify="emit('onUpdate')"
+          @on-error="displayError"
+        />
+        <DeleteBand
+          :id="item.bandId"
+          :name="item.bandName"
+          @on-place-modify="emit('onUpdate')"
+          @on-error="displayError"
+        />
+      </div>
     </template>
   </v-data-table>
   <v-snackbar v-model="snackbar" timeout="3000">

@@ -56,20 +56,21 @@ const headers = [
       <span v-else>Nespecifikováno</span>
     </template>
     <template v-slot:item.placeId="{ item }">
-      <EditPlace
-        :id="item.placeId"
-        :name="item.placeName"
-        :website="item.placeWebsite ?? ''"
-        @on-place-modify="emit('onUpdate')"
-        @on-error="displayError"
-        class="me-1"
-      />
-      <DeletePlace
-        :id="item.placeId"
-        :name="item.placeName"
-        @on-place-modify="emit('onUpdate')"
-        @on-error="displayError"
-      />
+      <div class="d-flex flex-column flex-sm-row ga-1 ma-1">
+        <EditPlace
+          :id="item.placeId"
+          :name="item.placeName"
+          :website="item.placeWebsite ?? ''"
+          @on-place-modify="emit('onUpdate')"
+          @on-error="displayError"
+        />
+        <DeletePlace
+          :id="item.placeId"
+          :name="item.placeName"
+          @on-place-modify="emit('onUpdate')"
+          @on-error="displayError"
+        />
+      </div>
     </template>
   </v-data-table>
   <v-snackbar v-model="snackbar" timeout="3000">
