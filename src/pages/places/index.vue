@@ -1,16 +1,11 @@
 <script setup lang="ts">
 import { onMounted, Ref, ref } from "vue";
 import { PlaceResponse, readAllPlaces } from "@/api/service/PlaceService";
+import {storeToRefs} from "pinia";
+import {usePlaceStore} from "@/stores/app";
 
-const places: Ref<PlaceResponse[]> = ref([]);
-const placesLoaded = ref(false)
-
-const fetchAllPlaces = () => {
-  readAllPlaces()
-    .then(p => { places.value = p; placesLoaded.value = true })
-};
-
-onMounted(fetchAllPlaces);
+const placeStore = usePlaceStore()
+const { places, placesLoaded } = storeToRefs(placeStore)
 </script>
 
 <template>
@@ -19,10 +14,10 @@ onMounted(fetchAllPlaces);
 
     <v-card class="mb-2">
       <div class="pa-4 d-flex justify-end">
-        <AddPlace @on-place-modify="fetchAllPlaces" />
+        <AddPlace @on-place-modify="placeStore.loadPlaces" />
       </div>
       <v-divider />
-      <PlaceList :places="places" :loaded="placesLoaded" @on-update="fetchAllPlaces" />
+      <PlaceList :places="places" :loaded="placesLoaded" @on-update="placeStore.loadPlaces" />
 
     </v-card>
   </div>

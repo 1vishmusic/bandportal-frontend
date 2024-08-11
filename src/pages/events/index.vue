@@ -1,27 +1,16 @@
 <script setup lang="ts">
-import {
-  EventResponse,
-  readAllEvents,
-  readUpcomingEvents,
-} from "@/api/service/EventService";
-import { onMounted, Ref, ref } from "vue";
+
+import { onMounted, ref } from "vue";
 import { BandResponse, readAllBands } from "@/api/service/BandService";
 import { PlaceResponse, readAllPlaces } from "@/api/service/PlaceService";
+import {storeToRefs} from "pinia";
+import {useEventStore} from "@/stores/app";
 
-const events: Ref<EventResponse[]> = ref([]);
-const upcomingEvents: Ref<EventResponse[]> = ref([]);
-const eventsLoaded = ref(false)
-const upcomingEventsLoaded = ref(false)
+const eventStore = useEventStore()
+const { events, upcomingEvents, eventsLoaded, upcomingEventsLoaded } = storeToRefs(eventStore)
 
 const bands = ref<BandResponse[]>([]);
 const places = ref<PlaceResponse[]>([]);
-
-const fetchAllEvents = () => {
-  readAllEvents()
-    .then(e => {events.value = e; eventsLoaded.value = true})
-  readUpcomingEvents()
-    .then(e => {upcomingEvents.value = e; upcomingEventsLoaded.value = true})
-};
 
 onMounted(() => {
   readAllBands()
@@ -29,7 +18,7 @@ onMounted(() => {
   readAllPlaces()
     .then(p => {places.value = p})
 
-  fetchAllEvents();
+  eventStore.loadEvents();
 });
 </script>
 
@@ -42,7 +31,7 @@ onMounted(() => {
         <AddEvent
           :bands="bands"
           :places="places"
-          @on-event-modify="fetchAllEvents"
+          @on-event-modify="eventStore.loadEvents"
         />
       </div>
       <v-divider />
@@ -52,7 +41,7 @@ onMounted(() => {
         :bands="bands"
         :places="places"
         sort-order="asc"
-        @on-update="fetchAllEvents"
+        @on-update="eventStore.loadEvents"
       />
     </v-card>
   </div>
@@ -64,7 +53,7 @@ onMounted(() => {
         <AddEvent
           :bands="bands"
           :places="places"
-          @on-event-modify="fetchAllEvents"
+          @on-event-modify="eventStore.loadEvents"
         />
       </div>
       <v-divider />
@@ -74,7 +63,7 @@ onMounted(() => {
         :bands="bands"
         :places="places"
         sort-order="desc"
-        @on-update="fetchAllEvents"
+        @on-update="eventStore.loadEvents"
       />
     </v-card>
   </div>

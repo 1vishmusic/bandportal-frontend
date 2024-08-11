@@ -1,24 +1,10 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
-import {BandResponse, readAllBands} from "@/api/service/BandService";
-import {PlaceResponse, readAllPlaces} from "@/api/service/PlaceService";
-import {EventResponse, readAllEvents, readUpcomingEvents} from "@/api/service/EventService";
+import {storeToRefs} from "pinia";
+import {useBandStore, useEventStore, usePlaceStore} from "@/stores/app";
 
-const bands = ref<BandResponse[]>([]);
-const places = ref<PlaceResponse[]>([]);
-const events = ref<EventResponse[]>([]);
-const upcomingEvents = ref<EventResponse[]>([]);
-
-onMounted(() => {
-  readAllBands()
-    .then(b => { bands.value = b })
-  readAllPlaces()
-    .then(p => { places.value = p })
-  readAllEvents()
-    .then(e => { events.value = e })
-  readUpcomingEvents()
-    .then(e => { upcomingEvents.value = e })
-});
+const { bands } = storeToRefs(useBandStore())
+const { places } = storeToRefs(usePlaceStore())
+const { events, upcomingEvents } = storeToRefs(useEventStore())
 </script>
 
 <template>

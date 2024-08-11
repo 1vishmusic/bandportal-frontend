@@ -1,16 +1,9 @@
 <script setup lang="ts">
-import { onMounted, Ref, ref } from "vue";
-import { BandResponse, readAllBands } from "@/api/service/BandService";
+import {useBandStore} from "@/stores/app";
+import {storeToRefs} from "pinia";
 
-const bands: Ref<BandResponse[]> = ref([]);
-const bandsLoaded = ref(false)
-
-const fetchAllBands = () => {
-  readAllBands()
-    .then(b => { bands.value = b; bandsLoaded.value = true })
-};
-
-onMounted(fetchAllBands);
+const bandStore = useBandStore()
+const { bands, bandsLoaded } = storeToRefs(bandStore)
 </script>
 
 <template>
@@ -19,10 +12,10 @@ onMounted(fetchAllBands);
 
     <v-card class="mb-2">
       <div class="pa-4 d-flex justify-end">
-        <AddBand @on-band-modify="fetchAllBands" />
+        <AddBand @on-band-modify="bandStore.loadBands" />
       </div>
       <v-divider />
-      <BandList :bands="bands" :loaded="bandsLoaded" @on-update="fetchAllBands" />
+      <BandList :bands="bands" :loaded="bandsLoaded" @on-update="bandStore.loadBands" />
     </v-card>
   </div>
 </template>
