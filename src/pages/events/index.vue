@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import { onMounted, ref } from "vue";
 import { BandResponse, readAllBands } from "@/api/service/BandService";
 import { PlaceResponse, readAllPlaces } from "@/api/service/PlaceService";

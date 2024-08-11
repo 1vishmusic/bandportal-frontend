@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { onMounted, Ref, ref } from "vue";
-import { PlaceResponse, readAllPlaces } from "@/api/service/PlaceService";
 import {storeToRefs} from "pinia";
 import {usePlaceStore} from "@/stores/app";
 
